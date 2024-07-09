@@ -58,13 +58,15 @@ import com.identityx.clientSDK.repositories.UserRepository;
 @Service
 public class Services {
 
-	@Autowired
-	ResourceLoader resourceLoader;
-	
-	@Autowired
- 	private Environment env;
+	final ResourceLoader resourceLoader;
+	private final Environment env;
 
 	Logger logger = LoggerFactory.getLogger("Services");
+
+    Services(Environment env, ResourceLoader resourceLoader) {
+        this.env = env;
+        this.resourceLoader = resourceLoader;
+    }
 
 	public User CreateUser(String userId) {
 		logger.info("Starting CreateUser Id : " + userId);
@@ -89,7 +91,6 @@ public class Services {
 		if (helperUser.getUser() == null) {
 			User aUser = new User();
 			try {
-
 				aUser.setUserId(userId);
 				aUser = userRepo.create(aUser);
 				helperUser.setStatutAndMessageAndUser("User " + userId + " created", aUser, Statut.Success);
@@ -103,6 +104,8 @@ public class Services {
 		logger.info("End creation User : " + userId);
 		return helperUser;
 	}
+	
+	
 	public UserHelper CreateUserv3(String userId, UserRepository userRepo) {
 		logger.info("Starting CreateUser Id : " + userId);
 		UserHelper helperUser = this.findUserV3(userId, userRepo);
@@ -124,6 +127,7 @@ public class Services {
 		logger.info("End creation User : " + userId);
 		return helperUser;
 	}
+
 
 	public TenantRepoFactoryHelper getTenant() {
 
