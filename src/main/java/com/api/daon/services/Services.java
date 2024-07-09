@@ -32,6 +32,7 @@ import com.daon.identityx.rest.model.pojo.DataSampleTypeEnum;
 import com.daon.identityx.rest.model.pojo.FaceDataSample;
 import com.daon.identityx.rest.model.pojo.Policy;
 import com.daon.identityx.rest.model.pojo.Registration;
+import com.daon.identityx.rest.model.pojo.RegistrationChallenge;
 import com.daon.identityx.rest.model.pojo.User;
 import com.daon.identityx.rest.model.support.DataHolder;
 import com.daon.identityx.rest.model.support.DataSampleEvaluation;
@@ -39,6 +40,7 @@ import com.identityx.clientSDK.TenantRepoFactory;
 import com.identityx.clientSDK.collections.ApplicationCollection;
 import com.identityx.clientSDK.collections.FaceDataSampleCollection;
 import com.identityx.clientSDK.collections.PolicyCollection;
+import com.identityx.clientSDK.collections.RegistrationCollection;
 import com.identityx.clientSDK.collections.UserCollection;
 import com.identityx.clientSDK.credentialsProviders.EncryptedKeyPropFileCredentialsProvider;
 import com.identityx.clientSDK.def.ICredentialsProvider;
@@ -46,10 +48,12 @@ import com.identityx.clientSDK.exceptions.ClientInitializationException;
 import com.identityx.clientSDK.exceptions.IdxRestException;
 import com.identityx.clientSDK.queryHolders.ApplicationQueryHolder;
 import com.identityx.clientSDK.queryHolders.PolicyQueryHolder;
+import com.identityx.clientSDK.queryHolders.RegistrationQueryHolder;
 import com.identityx.clientSDK.queryHolders.UserQueryHolder;
 import com.identityx.clientSDK.repositories.ApplicationRepository;
 import com.identityx.clientSDK.repositories.AuthenticationRequestRepository;
 import com.identityx.clientSDK.repositories.PolicyRepository;
+import com.identityx.clientSDK.repositories.RegistrationChallengeRepository;
 import com.identityx.clientSDK.repositories.RegistrationRepository;
 import com.identityx.clientSDK.repositories.UserRepository;
 
@@ -307,6 +311,23 @@ public class Services {
 	
 	}
 
+	public Registration findRegistration(User user, String registrationId) throws IdxRestException {
+
+		RegistrationRepository regRepo = this.getTenant().getTenantRepoFactory().getRegistrationRepo();
+		RegistrationQueryHolder holder = new RegistrationQueryHolder();
+		holder.getSearchSpec().setRegistrationId(registrationId);
+		RegistrationCollection registrationCollection = regRepo.list(user.getRegistrations().getHref(), holder);
+
+		switch (registrationCollection.getItems().length) {
+			case 0:
+				return null;
+			case 1:
+				return registrationCollection.getItems()[0];
+			default:
+				throw new RuntimeException("More than one registration with the same RegistrationId!");
+		}
+	}
+
 	public Policy findPolicy(TenantRepoFactory trf, String aPolicyId, Application app) {
 
 		try {
@@ -444,4 +465,16 @@ public class Services {
 		return response;
 	}
 
+	public RegistrationChallenge addRegistrationChallenge(Registration reg) throws IdxRestException {
+		TenantRepoFactory trf = this.getTenant().getTenantRepoFactory();
+		RegistrationChallengeRepository regChallengeRepository = trf.getRegistrationChallengeRepo();
+		RegistrationChallenge regChallenge = new RegistrationChallenge();
+		logger.info("creating registration challenge");
+		Application app = this.findApplication(trf, env.getProperty("applicationId"));
+		Policy policy = this.findPolicy(trf, env.getProperty("fido.reg_policy_id"),app);
+		regChallenge.setRegistration(reg);
+		regChallenge.setPolicy(policy);
+		regChallenge = regChallengeRepository.create(regChallenge);
+		return regChallenge;
+}
 }

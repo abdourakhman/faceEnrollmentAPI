@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.daon.models.AuthenticationRequestHelper;
 import com.api.daon.models.FormatData;
 import com.api.daon.models.FormatData2;
+import com.api.daon.models.RegistrationHelper;
 import com.api.daon.models.TenantRepoFactoryHelper;
 import com.api.daon.models.UserHelper;
 import com.api.daon.models.UserId;
@@ -29,6 +30,7 @@ import com.daon.identityx.rest.model.pojo.Application;
 import com.daon.identityx.rest.model.pojo.AuthenticationRequest;
 import com.daon.identityx.rest.model.pojo.FaceDataSample;
 import com.daon.identityx.rest.model.pojo.Registration;
+import com.daon.identityx.rest.model.pojo.RegistrationChallenge;
 import com.daon.identityx.rest.model.pojo.User;
 import com.daon.identityx.rest.model.support.ImageType;
 import com.identityx.clientSDK.TenantRepoFactory;
@@ -77,8 +79,7 @@ public class TestController {
             try {
                 TenantRepoFactoryHelper trfh = services.getTenant();
                 TenantRepoFactory trf = trfh.getTenantRepoFactory();
-                RegistrationRepository regRepo
-                        = trf.getRegistrationRepo();
+                RegistrationRepository regRepo = trf.getRegistrationRepo();
                 reg.setUser(user);
                 Application application = services.findApplication(trf, env.getProperty("applicationId"));
                 reg.setApplication(application);
@@ -92,6 +93,18 @@ public class TestController {
         }
         return null;
     }
+
+    @PostMapping("/CreateRegistrationChallenge")
+    public RegistrationChallenge CreateRegistrationChallenge(@RequestBody RegistrationHelper rHelper) throws IOException, ClientInitializationException, IdxRestException {
+        
+        Registration registration = services.findRegistration(rHelper.getUser(), rHelper.getRegistrationId());
+        if (registration != null) {
+            RegistrationChallenge regChallenge =  services.addRegistrationChallenge(registration);
+            return regChallenge;
+        }
+        return null;
+    }
+
 
     @PostMapping("/AddSelfieImage")
     public FaceDataSampleCollection AddSelfieImage(@RequestBody FormatData formatData) {
@@ -115,7 +128,6 @@ public class TestController {
         }
         return faceDataSampleCollection;
     }
-    
     
     
     
