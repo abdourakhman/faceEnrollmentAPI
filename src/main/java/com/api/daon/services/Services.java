@@ -140,8 +140,12 @@ public class Services {
 			//Resource jks = resourceLoader.getResource("classpath:IdentityXKeyWrapper.jks");
 			//InputStream jksIn = resourceLoader.getResource("classpath:IdentityXKeyWrapper.jks").getInputStream();
 
-			ICredentialsProvider tenantCredentialProvider = new EncryptedKeyPropFileCredentialsProvider(resourceLoader.getResource("classpath:IdentityXKeyWrapper.jks").getInputStream(), env.getProperty("jkspass"),
-					resourceLoader.getResource("classpath:credential.properties").getInputStream(), null, null);
+			ICredentialsProvider tenantCredentialProvider = new EncryptedKeyPropFileCredentialsProvider(
+				resourceLoader.getResource("classpath:IdentityXKeyWrapper.jks").getInputStream(),
+				env.getProperty("jkspass"),
+				resourceLoader.getResource("classpath:credential.properties").getInputStream(), 
+				"identityxCert", 
+				env.getProperty("jkspass"));
 
 			TenantRepoFactory trf = new TenantRepoFactory(tenantCredentialProvider);
 			trfh.setTenantRepoFactory(trf);
