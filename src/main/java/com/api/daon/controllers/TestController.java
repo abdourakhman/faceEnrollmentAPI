@@ -96,8 +96,8 @@ public class TestController {
 
     @PostMapping("/CreateRegistrationChallenge")
     public RegistrationChallenge CreateRegistrationChallenge(@RequestBody RegistrationHelper rHelper) throws IOException, ClientInitializationException, IdxRestException {
-        
-        Registration registration = services.findRegistration(rHelper.getUser(), rHelper.getRegistrationId());
+        User user = services.findUser(rHelper.getUser().getUserId());
+        Registration registration = services.findRegistration(user, rHelper.getRegistrationId());
         if (registration != null) {
             RegistrationChallenge regChallenge =  services.addRegistrationChallenge(registration);
             return regChallenge;
@@ -131,13 +131,13 @@ public class TestController {
     
     
     
-    @GetMapping("/createAuthRequest")
+    @GetMapping("/CreateAuthRequest")
     public AuthenticationRequest createAuthRequest() throws IdxRestException, IOException, ClientInitializationException {
         logger.info("Start createAuthRequest");
         return services.createAuthRequest();
     }
     
-    @PostMapping("/createAuthRequestForUser")
+    @PostMapping("/CreateAuthRequestForUser")
     public AuthenticationRequestHelper createAuthRequestforUser(@RequestBody UserId userId) throws IdxRestException, IOException, ClientInitializationException {
         logger.info("Start createAuthRequest for User");
         return services.createAuthRequestForUser(userId.getUserId());

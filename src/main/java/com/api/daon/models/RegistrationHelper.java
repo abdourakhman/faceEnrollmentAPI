@@ -9,13 +9,13 @@ import com.daon.identityx.rest.model.pojo.User;
 
 /**
  *
- * @author Mehdi ES-SAFI (GEMADEC)
+ * @author Abdourahmane NDIAYE (GEMADEC)
  */
 public class RegistrationHelper {
     
     private User user;
     private String registrationId;
-
+    
     public User getUser() {
         return user;
     }

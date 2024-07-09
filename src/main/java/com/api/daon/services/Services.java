@@ -317,7 +317,7 @@ public class Services {
 		RegistrationQueryHolder holder = new RegistrationQueryHolder();
 		holder.getSearchSpec().setRegistrationId(registrationId);
 		RegistrationCollection registrationCollection = regRepo.list(user.getRegistrations().getHref(), holder);
-
+		if (registrationCollection != null) System.out.println("Objet  non null");
 		switch (registrationCollection.getItems().length) {
 			case 0:
 				return null;
@@ -471,6 +471,7 @@ public class Services {
 		RegistrationChallenge regChallenge = new RegistrationChallenge();
 		logger.info("creating registration challenge");
 		Application app = this.findApplication(trf, env.getProperty("applicationId"));
+		System.out.println("policy:"+env.getProperty("fido.reg_policy_id"));
 		Policy policy = this.findPolicy(trf, env.getProperty("fido.reg_policy_id"),app);
 		regChallenge.setRegistration(reg);
 		regChallenge.setPolicy(policy);
