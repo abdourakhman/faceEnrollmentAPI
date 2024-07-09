@@ -82,7 +82,7 @@ public class TestController {
                 reg.setUser(user);
                 Application application = services.findApplication(trf, env.getProperty("applicationId"));
                 reg.setApplication(application);
-                reg.setRegistrationId(userId.getUserId());
+                reg.setRegistrationId("reg"+System.currentTimeMillis()) ;
                 reg = regRepo.create(reg);
                 return reg;
             } catch (Exception e) {
