@@ -210,6 +210,7 @@ public class Services {
 		case 0:
 			return null;
 		case 1:
+			logger.info(userId + " found");
 			return userCollection.getItems()[0];
 		default:
 			throw new RuntimeException("More than one user with the same UserId!");
@@ -317,11 +318,11 @@ public class Services {
 		RegistrationQueryHolder holder = new RegistrationQueryHolder();
 		holder.getSearchSpec().setRegistrationId(registrationId);
 		RegistrationCollection registrationCollection = regRepo.list(user.getRegistrations().getHref(), holder);
-		if (registrationCollection != null) System.out.println("Objet  non null");
 		switch (registrationCollection.getItems().length) {
 			case 0:
 				return null;
 			case 1:
+				logger.info("Registration " + registrationId + " found");
 				return registrationCollection.getItems()[0];
 			default:
 				throw new RuntimeException("More than one registration with the same RegistrationId!");
@@ -342,7 +343,7 @@ public class Services {
 				logger.info("Could not find an active policy with the PolicyId: " + aPolicyId);
 				throw new RuntimeException("Could not find an active policy with the PolicyId: " + aPolicyId);
 			case 1:
-				logger.info("Application found");
+				logger.info("Policy found");
 				return policyCollection.getItems()[0];
 			default:
 				logger.info("There is more than one active policy with the name: " + aPolicyId);
@@ -471,7 +472,6 @@ public class Services {
 		RegistrationChallenge regChallenge = new RegistrationChallenge();
 		logger.info("creating registration challenge");
 		Application app = this.findApplication(trf, env.getProperty("applicationId"));
-		System.out.println("policy:"+env.getProperty("fido.reg_policy_id"));
 		Policy policy = this.findPolicy(trf, env.getProperty("fido.reg_policy_id"),app);
 		regChallenge.setRegistration(reg);
 		regChallenge.setPolicy(policy);
