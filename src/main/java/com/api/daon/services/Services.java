@@ -31,6 +31,7 @@ import com.daon.identityx.rest.model.pojo.DataSampleFormatEnum;
 import com.daon.identityx.rest.model.pojo.DataSampleTypeEnum;
 import com.daon.identityx.rest.model.pojo.FaceDataSample;
 import com.daon.identityx.rest.model.pojo.Policy;
+import com.daon.identityx.rest.model.pojo.Registration;
 import com.daon.identityx.rest.model.pojo.User;
 import com.daon.identityx.rest.model.support.DataHolder;
 import com.daon.identityx.rest.model.support.DataSampleEvaluation;
@@ -49,6 +50,7 @@ import com.identityx.clientSDK.queryHolders.UserQueryHolder;
 import com.identityx.clientSDK.repositories.ApplicationRepository;
 import com.identityx.clientSDK.repositories.AuthenticationRequestRepository;
 import com.identityx.clientSDK.repositories.PolicyRepository;
+import com.identityx.clientSDK.repositories.RegistrationRepository;
 import com.identityx.clientSDK.repositories.UserRepository;
 
 /**
